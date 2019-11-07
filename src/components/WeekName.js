@@ -6,7 +6,7 @@ import React from 'react';
  * @param {Object} props
  */
 
-export default function Week(props) {
+export default function WeekName(props) {
 
     const {week} = props;
     return (

@@ -1,27 +1,40 @@
 import React from 'react';
+import {getOnlyThreeMethods} from '../helpers/calendar/methods';
+import Day from './Day';
 
 /**
- * Year component
+ * Month component
  *
  * @param {Object} props
  */
 
-export default function Week(props) {
+export default function Month(props) {
+    let {activeDate, visibleMonths, setActiveData} = props,
+        {activeMonth} = getOnlyThreeMethods(activeDate, visibleMonths),
+        activeDay = false;
 
-    let {visibleMonths} = props;
+    let changeActiveDay = (dd, mm, yyyy) => {
+        let updatedData = new Date(dd + ' ' + mm + ' ' + yyyy);
+        setActiveData(updatedData);
+    };
 
     return (
         <div className="year-inner-component">
-            <ul>
+            <ul className={'year-root-container'}>
+                {activeMonth.map((item, index) => {
+                    activeDay = activeDate.day === item.value && activeDate.month === item.month;
 
+                    let propsData = {
+                        activeDay,
+                        changeActiveDay,
+                        item
+                    };
+
+                    return (
+                        <Day propsData={propsData} key={item.month + '_' + index} />
+                    )
+                })}
             </ul>
         </div>
     );
 }
-
-/**
- * todo
- * берешь предыдущий месяц, если это январь, то берешь с предыдущего года. высчитываешь с какого дня недели начинался этот месяц.
- * начинаешь строить от 0..7 строчки, начиная с цифры, которая соотвествует дню, в который этот месяц начинался. Например
- * 7 октября 2019 начинается в пн - значит строим с  цифры 1 (потому что  нумерация с 0 а у америксов 0 - воскресенье). строим 3 месяца
- */

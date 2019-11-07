@@ -1,29 +1,20 @@
 import React from 'react';
-import {getOnlyThreeMethods} from '../helpers/calendar/methods';
 
 /**
- * Year component
+ * Day component
  *
  * @param {Object} props
  */
 
-export default function Month(props) {
-    let {activeDate, visibleMonths} = props,
-        {activeMonth} = getOnlyThreeMethods(activeDate, visibleMonths);
-
-    console.log(props);
+export default function Day(props) {
+    let {item, activeDay, changeActiveDay} = props.propsData,
+        activeDayClass = activeDay ? 'active-day' : '',
+        {month, position, value, year} = item;
 
     return (
-        <div className="year-inner-component">
-            <ul className={'year-root-container'}>
-                {activeMonth.map((item, index) => {
-                    return (
-                        <li className={'day-cell' + ' ' + item.month + ' ' + item.position} key={item.month + '_' + index}>
-                            {item.value}
-                        </li>
-                    )
-                })}
-            </ul>
-        </div>
+        <li className={'day-cell' + ' ' + month + ' ' + position + ' ' + activeDayClass}
+            onClick={() => changeActiveDay(value, month, year)}>
+            {value}
+        </li>
     );
 }

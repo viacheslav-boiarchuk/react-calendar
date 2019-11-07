@@ -2,131 +2,56 @@ import { connect } from 'react-redux';
 import { createSelector } from 'reselect';
 
 import {
-    openedErrorModal,
-    openedTaskModal,
-    openedRemoveModal,
-    openedDateModal,
-    activeTaskID,
-    isOpened,
-    isSidebarVisible
-} from './selectors/common';
+    calendarWeekState,
+    calendarVisibleMonthState,
+    calendarActiveDateState
+} from './selectors/calendar';
 
 import {
-    categoryListState
-} from './selectors/categories.js';
-
-import {
-    toggleSidebar,
-    addCategories,
-    modifyActiveCategory,
-    toggleNewTaskModal,
-    toggleRemoveModal,
-    removeCategory,
-    toggleErrorModal,
-    toggleDateModal,
-    changeTaskDate,
-    addTask
+    setActiveData
 } from './actions';
 
-
-const isOpenedSelector = createSelector(
-    [isOpened],
-    (isOpened) => {
-        return ({
-            isOpened
-        });
-    }
-);
-
-export const headerConnector = connect(isOpenedSelector, {
-    toggleSidebar: () => toggleSidebar()
-});
-
-
-const sidebarSelector = createSelector(
-    [isSidebarVisible, categoryListState],
-    (isSidebarVisible, categoryListState) => {
-        return ({
-            isSidebarVisible, categoryListState
-        });
-    }
-);
-
-export const sideBarConnector = connect(sidebarSelector, {
-    addCategories: (payload) => addCategories(payload),
-    toggleRemoveModal: (payload) => toggleRemoveModal(payload),
-    modifyActiveCategory: (payload) => modifyActiveCategory(payload)
-});
-
-const categoriesSelector = createSelector(
-    [categoryListState],
-    (categoryListState) => {
-        return ({
-            categoryList: categoryListState
-        });
-    }
-);
-
-export const tasksConnector = connect(categoriesSelector, {
-    toggleNewTaskModal: (payload) => toggleNewTaskModal(payload),
-    toggleErrorModal: (payload) => toggleErrorModal(payload),
-    toggleDateModal: (payload) => toggleDateModal(payload),
-});
-
-const removeFlagSelector = createSelector(
-    [openedRemoveModal],
-    (openedRemoveModal) => {
-        return ({
-            openedRemoveModal
-        });
-    }
-);
-
-export const removeModalConnector = connect(removeFlagSelector, {
-    removeCategory: (payload) => removeCategory(payload),
-    toggleRemoveModal: (payload) => toggleRemoveModal(payload),
-});
-
-const dateModalSelector = createSelector(
-    [openedDateModal, activeTaskID],
-    (openedDateModal, activeTaskID) => {
-        return ({
-            openedDateModal,
-            activeTaskID
-        });
-    }
-);
-
-export const dateModalConnector = connect(dateModalSelector, {
-    toggleDateModal: (payload) => toggleDateModal(payload),
-    changeTaskDate: (payload) => changeTaskDate(payload),
-});
-
-const openedFlagSelector = createSelector(
-    [openedTaskModal],
-    (openedTaskModal) => {
-        return ({
-            openedTaskModal
-        });
-    }
-);
-
-export const taskModalConnector = connect(openedFlagSelector, {
-    toggleNewTaskModal: (payload) => toggleNewTaskModal(payload),
-    addTask: (payload) => addTask(payload)
-});
-
-const errorFlagSelector = createSelector(
-    [openedErrorModal],
-    (openedErrorModal) => {
-        return ({
-            openedErrorModal
-        });
-    }
-);
-
-export const errorModalConnector = connect(errorFlagSelector, {
-    toggleErrorModal: (payload) => toggleErrorModal(payload),
-});
-
 export const AppConnector = connect(state => state);
+
+export const calendarConnector = connect(() => {return {}}, {
+    setActiveData: (payload) => setActiveData(payload),
+});
+
+const navigationState = createSelector(
+    [calendarActiveDateState],
+    (calendarActiveDateState) => {
+        return ({
+            activeDate: calendarActiveDateState
+        });
+    }
+);
+
+export const navigatorConnector = connect(navigationState, {
+    setActiveData: (payload) => setActiveData(payload),
+});
+
+const weekNameState = createSelector(
+    [calendarWeekState],
+    (calendarWeekState) => {
+        return ({
+            week: calendarWeekState
+        });
+    }
+);
+
+export const weekNameConnector = connect(weekNameState, null);
+
+
+const monthsState = createSelector(
+    [calendarVisibleMonthState, calendarActiveDateState],
+    (calendarVisibleMonthState, calendarActiveDateState) => {
+        return ({
+            visibleMonths: calendarVisibleMonthState,
+            activeDate: calendarActiveDateState
+        });
+    }
+);
+
+export const monthsConnector = connect(monthsState, {
+    setActiveData: (payload) => setActiveData(payload),
+});

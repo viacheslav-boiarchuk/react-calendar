@@ -1,45 +1,24 @@
-import { createSelector } from 'reselect'
+import { createSelector } from 'reselect';
+import { convertToJS } from '../helpers/selector';
 
-export const rootCommonState = createSelector(
-    state => state.common,
-    common => common
+export const rootCalendarState = createSelector(
+    state => state.calendar,
+    calendar => calendar
 );
 
-export const openedErrorModal = createSelector(
-    rootCommonState,
-    common => {
-        return common.get('openedErrorModal')
+export const calendarWeekState = createSelector(
+    rootCalendarState,
+    calendar => {
+        return convertToJS(calendar.get('week'))
     }
 );
 
-export const openedTaskModal = createSelector(
-    rootCommonState,
-    common => common.get('openedTaskModal')
+export const calendarVisibleMonthState = createSelector(
+    rootCalendarState,
+    calendar => convertToJS(calendar.get('visibleMonthList'))
 );
 
-export const openedRemoveModal = createSelector(
-    rootCommonState,
-    common => common.get('openedRemoveModal')
-);
-
-export const openedDateModal = createSelector(
-    rootCommonState,
-    common => common.get('openedDateModal')
-);
-
-export const activeTaskID = createSelector(
-    rootCommonState,
-    common => common.get('activeTaskID')
-);
-
-export const isOpened = createSelector(
-    rootCommonState,
-    common => common.get('isOpened')
-);
-
-export const isSidebarVisible = createSelector(
-    rootCommonState,
-    common => {
-        return common.get('isSidebarVisible');
-    }
+export const calendarActiveDateState = createSelector(
+    rootCalendarState,
+    calendar => convertToJS(calendar.get('activeDate'))
 );
